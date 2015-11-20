@@ -108,7 +108,9 @@ router.route('/latebuses').get(
                 resp.delayedBuses = delayedBuses;
                 resp.updateDate = updateDate;
                 resp.updateTime = updateTime;
+                // TODO updateTimestamp
                 resp.source = LATE_BUS_SOURCE_URL;
+                resp.phone = "(858) 496-8460";
 
                 res.send(resp);
             }
