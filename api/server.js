@@ -16,6 +16,7 @@ router.route('/latebuses').get(
         request(LATE_BUS_SOURCE_URL, function (error, response, body) {
             var updateDate = undefined,
                 updateTime = undefined,
+                updateTimestamp = 0,
                 lateBusTable = undefined,
                 delayedBuses = [],
                 delayedBus = {},
@@ -49,8 +50,8 @@ router.route('/latebuses').get(
                 }
 
                 endPos = body.indexOf('</SPAN>', pos);
-                updateTime = body.substring(pos + 6, endPos);
-                updateTime = updateTime.trim();
+                updateTime = body.substring(pos + 6, endPos).trim();
+                updateTimestamp = Date.parse(updateDate + ' ' + updateTime + ' -0800');
 
                 pos = body.indexOf('<!-- BEGIN LIST -->');
                 if (pos === -1) {
@@ -68,9 +69,6 @@ router.route('/latebuses').get(
 
                 // Table with bus details in
                 lateBusTable = body.substring(pos + 19, endPos);
-
-                console.log(updateDate);
-                console.log(updateTime);
 
                 $ = cheerio.load(lateBusTable);
 
@@ -109,7 +107,7 @@ router.route('/latebuses').get(
                 resp.updateDate = updateDate;
                 resp.updateTime = updateTime;
                 // TODO updateTimestamp
-                resp.updateTimestamp = 0;
+                resp.updateTimestamp = updateTimestamp;
                 resp.source = LATE_BUS_SOURCE_URL;
                 resp.phone = "(858) 496-8460";
 
